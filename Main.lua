@@ -422,7 +422,7 @@ runcode(function()
             lplr.Character.InventoryFolder.Value[ItemName],
             ProjectileName,
             ProjectileName,
-            Part.Position,
+            Part.CFrame * CFrame.new(0, -3, 4).Position,
             Part.Position,
             Vector3.new(0, -20, 0),
             game:GetService("HttpService"):GenerateGUID(false),
@@ -459,6 +459,37 @@ runcode(function()
             end
         end,
         ["HoverText"] = "A TPAura that uses Projectiles found in SW chests"
+    })
+end)
+runcode(function()
+    local GrappleDisabler2 = {["Enabled"] = false}
+    GrappleDisabler2 = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "GrappleDisabler2",
+        ["Function"] = function(callback)
+            if callback then
+                spawn(function()
+                    repeat
+                        task.wait(0.15)
+                        if isalive(lplr) and getitem("grappling_hook") then
+                            Client:Get(bedwars["ProjectileRemote"]):CallServerAsync(
+                                lplr.Character.InventoryFolder.Value.grappling_hook,
+                                "grappling_hook_projectile",
+                                "grappling_hook_projectile",
+                                lplr.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3, 4).Position,
+                                lplr.Character.HumanoidRootPart.Position,
+                                Vector3.new(0, -20, 0),
+                                game:GetService("HttpService"):GenerateGUID(false),
+                                {
+                                    ["drawDurationSeconds"] = 1
+                                },
+                                game:GetService("Workspace"):GetServerTimeNow()
+                            )
+                        end
+                    until not GrappleDisabler2["Enabled"]
+                end)
+            end
+        end,
+        ["HoverText"] = "You need to set the speed yourself but also has deals damage"
     })
 end)
 
